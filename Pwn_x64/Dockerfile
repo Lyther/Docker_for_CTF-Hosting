@@ -2,8 +2,9 @@ FROM ubuntu:18.04
 
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN apt-get update && apt-get install -y apt-utils apt-transport-https && \
-    apt-get install -y  lib32z1 xinetd && \
+RUN apt-get update && \
+    apt-get install -y apt-utils apt-transport-https && \
+    apt-get install -y lib32z1 xinetd && \
     apt-get -y dist-upgrade
 
 RUN useradd -m ctf
@@ -26,17 +27,13 @@ RUN mkdir /home/ctf/bin && \
     cp /bin/cat /home/ctf/bin
 
 COPY ./ctf.xinetd /etc/xinetd.d/ctf
-COPY ./xinetedService.sh /xinetedService.sh
 RUN echo "Blocked by ctf_xinetd" > /etc/banner_fail
-
-RUN chmod +x /xinetedService.sh
 
 COPY ./files/ /home/ctf/
 RUN chown -R root:ctf /home/ctf && \
     chmod -R 750 /home/ctf && \
     chmod 740 /home/ctf/flag.txt
 
-CMD ["/xinetedService.sh"]
+CMD ["xinetd", "-dontfork"]
 
 EXPOSE 9999
-
