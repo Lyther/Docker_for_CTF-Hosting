@@ -7,6 +7,14 @@
 
 Docker files for hosting Pwn challenges,Web Challeges and Python Challenges in CTFs
 
+## Installation
+
+Now we have 3 categories: pwn, python, and web.
+
+According to the challenge type, use the cooperated environment.
+
+Some special cases are listed below README.md in sub-directories.
+
 ## Usage
 
 Run `start.sh` in specific folders with `docker_name` and `port_number` as parameter which will build the images and run them 
