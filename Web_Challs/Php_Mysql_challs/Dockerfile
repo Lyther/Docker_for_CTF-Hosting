@@ -1,13 +1,17 @@
-FROM php:7.2-apache
+# Pull base image 
+FROM ubuntu:trusty
 
-RUN apt-get update && apt-get install -y
+WORKDIR /app
 
-RUN docker-php-ext-install mysqli pdo_mysql
+RUN apt-get update \
+	&& apt-get install -y mysql-server apache2 php5 php5-mysql
 
-RUN mkdir /app \
- && mkdir /app/moe-php-mysql-demo \
- && mkdir /app/moe-php-mysql-demo/www
+COPY databases/database.sql ./
+COPY files/ /var/www/html/
 
-COPY files/ /app/moe-php-mysql-demo/www/
+ADD start.sh .
+RUN mkdir /init-scripts/ \
+    && mv ./start.sh /init-scripts/ \
+    && chmod +x /init-scripts/start.sh
 
-RUN cp -r /app/moe-php-mysql-demo/www/* /var/www/html/.
+ENTRYPOINT ["/init-scripts/start.sh"]

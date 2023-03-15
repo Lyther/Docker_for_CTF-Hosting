@@ -1,0 +1,11 @@
+version: "2"
+
+services:
+  golang_nginx_challs_template:
+    build: .
+    image: compassctf/golang_nginx_challs_template
+    restart: always
+    ports:
+      - "127.0.0.1:15001:9999"
+    environment:
+      - GZCTF_FLAG=FLAG{test_flag_string_babecafe}

@@ -18,17 +18,16 @@ if (!$query) {
 $row = mysql_fetch_array($query, MYSQL_ASSOC);
 //echo $row["pw"];
   if($row['user']=="admin") {
-    echo "<p>Logged in! Key: CTF{ANOTHER_simple_sqli} </p>";
+    echo "<p>Logged in! Key: *********** </p>";
   }
 
   if($row['user'] != "admin") {
     echo("<p>You are not admin!</p>");
   }
-
+}
 
 ?>
-<!-- index.php.bak-->
-<form method=post action=''>
+<form method=post action=index.php>
 <input type=text name=user value="Username">
 <input type=password name=pass value="Password">
 <input type=submit>
