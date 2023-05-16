@@ -7,7 +7,7 @@ service ctf
     user = nobody
     type = UNLISTED
     server = /usr/bin/python3
-    server_args = -u /1by1.py
+    server_args = -u /app.py
     banner_fail = /etc/banner_fail
     per_source = 10
     rlimit_cpu = 20

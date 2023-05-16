@@ -17,3 +17,8 @@ RUN sed -Ei 's/^(bind-address|log)/#&/' /etc/mysql/my.cnf \
 rm -f /usr/local/apache2/logs/httpd.pid
 service mysql start
 apache2ctl start
+
+while test "1" = "1"
+do
+sleep 1000
+done

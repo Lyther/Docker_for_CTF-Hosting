@@ -1,19 +1,39 @@
-from flask import Flask, send_from_directory
-from os import getenv
+from aiohttp import web
 
-app = Flask(__name__)
+class Server:
+    def __init__(self):
+        self.app = web.Application()
 
-@app.route('/')
-def home():
-   return send_from_directory('.', 'index.html')
+    def get(self, path, c_type='text/html'):
+        def handle(handler):
+            decorated_handler = self._handle_factory(handler, c_type)
+            self.app.add_routes([web.get(path, decorated_handler)])
+        return handle
 
-@app.route('/robots.txt')
-def robots():
-    return send_from_directory('.', 'robots.txt')
+    def post(self, path, c_type='text/html'):
+        def handle(handler):
+            decorated_handler = self._handle_factory(handler, c_type)
+            self.app.add_routes([web.post(path, decorated_handler)])
+        return handle
 
-@app.route('/l33t_hax0r.html')
-def flag():
-    return send_from_directory('.', 'l33t_hax0r.html')
+    def _handle_factory(self, handler, c_type):
+        async def decorated_handler(request):
+            try:
+                status, data, headers, *_ = await handler(request) + ({},)
+            except Exception as e:
+                print(e)
+                return web.Response(text='Internal server error', status=500)
 
-if __name__ == '__main__':
-   app.run(host='0.0.0.0', port=9999)
+            if status == 200:
+                return web.Response(
+                    text=data,
+                    content_type=c_type,
+                    headers=headers
+                )
+            if status == 302:
+                raise web.HTTPFound(location=data)
+            return web.Response(text=data, status=status, headers=headers)
+        return decorated_handler
+
+    def run(self, host, port):
+        web.run_app(self.app, host=host, port=port)

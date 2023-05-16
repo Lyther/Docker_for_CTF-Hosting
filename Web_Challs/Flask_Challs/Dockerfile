@@ -1,18 +1,18 @@
-FROM python:3.8-slim
+FROM ubuntu:bionic
+RUN apt-get -q -y update && \
+    apt-get -q -y install \
+    python3-dev \
+    xinetd \
+    python3-pip
 
-RUN useradd -m ctf
-
-WORKDIR /chal
+COPY requirements.txt .
+RUN pip3 install -r requirements.txt
 
 COPY files/ .
 
-ENV PORT 9999
-RUN pip3 install --upgrade --no-cache-dir -r requirements.txt
+ADD start.sh .
+RUN mkdir /init-scripts/ \
+    && mv ./start.sh /init-scripts/ \
+    && chmod +x /init-scripts/start.sh
 
-RUN chown -R root:ctf /chal && \
-    chmod 750 /chal /chal/server.py
-
-USER ctf
-CMD ["/usr/local/bin/python", "/chal/server.py"]
-
-EXPOSE 9999
+ENTRYPOINT ["/init-scripts/start.sh"]

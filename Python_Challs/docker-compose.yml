@@ -1,0 +1,11 @@
+version: "2"
+
+services:
+  super_secret_aes:
+    build: .
+    image: compassctf/super_secret_aes
+    restart: always
+    ports:
+      - "127.0.0.1:8302:1337"
+    environment:
+      - FLAG=flag{kfccrazythursdayvme50}
